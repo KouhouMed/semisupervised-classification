@@ -232,7 +232,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--data_dir",
         help="Root directory where the dataset is stored",
-        default="DB",
+        default="data",
         type=str,
     )
     parser.add_argument(
@@ -245,7 +245,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--num_epochs",
         help="Number of training epochs for classifier",
-        default=20,
+        default=100,
         type=int,
     )
     parser.add_argument(
@@ -279,13 +279,7 @@ if __name__ == "__main__":
         default=4,
         type=int,
     )
-    parser.add_argument(
-        "--model_name",
-        help="Method used for representation learning",
-        choices=["ae", "dae"],
-        default="ae",
-        type=str,
-    )
+
     arguments = parser.parse_args()
 
     main(arguments)

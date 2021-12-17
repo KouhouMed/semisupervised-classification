@@ -1,31 +1,45 @@
-### Results
-These are the top-1 accuracy of linear classifiers trained on the 
-(frozen) representations learned by SimCLR:
+# Semi-Supervised Image Classification
 
-**SimCLR training:**
 
-Dataset: CIFAR-10
-Architecture: ResNet-18
-Batch Size: 256
-Epochs: 20
-Project output dimensionality: 64
-Optimizer: Adam
-Temperature: 0.5
-Weight decay': 1e-06
-Learning rate: 3e-4
+## Scripts
 
-**Linear evaluation:**
+* `cifar10_supervised.py`
+This script concerns the supervised baseline with ResNet18.
 
-Epochs: 500
-Batch Size: 32
-Learning rate: 3e-4
+Example of usage:
 
-**Supervised:**
+```
+python3 cifar10_supervised.py --data_dir data -lr 1e-3 --num_epochs 100 -bs 32 > best_accuracies.txt
+```
 
-Batch Size: 32
-Epochs: 500
-Learning rate: 3e-4
+Such command will train the supervised on 4 times, on 1%, 10%, 50%, 100% of train set 
+and print out (in `best_accuracies.txy`) the best test accuracy for every phase.
 
+* `cifar10_autoencoder.py`:
+This script concerns the autoencoder for reconstruction and denoising baselines.
+
+Examples of usage:
+
+```
+python3 cifar10_autoencoder.py --data_dir data --model_name vanilla_ae -lr 1e-3 --num_epochs 20 -bs 32
+python3 cifar10_autoencoder.py --model_name vanilla_dae --save_dir models
+python3 cifar10_autoencoder.py --model_name resnet_ae
+python3 cifar10_autoencoder.py --model_name resnet_dae
+```
+
+Suchs commands will train the autoencoder (in an unsupervised manner) on cifar10 train set and save
+the model directory specified by `--save_dir`.
+
+* `cifar10_simclr.py`
+
+* `linear_classification.py`
+
+* `models.py`
+
+* `utils.py`
+
+
+## Raw Results
 | Label fraction | SimCLR | Supervised |
 |----------------|--------|------------|
 | 1%             | 60.7%  | 49.1%      |
@@ -33,15 +47,18 @@ Learning rate: 3e-4
 | 50%            | 73.1%  | 72.1%      |
 | 100%           | 74.8%  |            |
 
-
 ### Autoencoder with data aug (3convs + 3deconvs)
 lr 1e-3
+
 bs 32
+
 100 epochs
+
 Training complete in 49m 1s
 Minimum test Loss: 0.551848
 
 **evaluation**
+
 1%
 Training complete in 1m 48s
 Best test Accuracy: 0.300500
@@ -61,12 +78,16 @@ Best test Accuracy: 0.400300
 
 ### DAE (3convs + 3deconvs)
 lr 1e-3
+
 bs 32
+
 100 epochs
+
 Training complete in 36m 8s
 Minimum test Loss: 0.555994
 
 **evaluation**
+
 1%
 Training complete in 1m 44s
 Best test Accuracy: 0.322600
@@ -87,12 +108,16 @@ Best test Accuracy: 0.427000
 
 ### resnet AE
 lr 1e-3
+
 bs 32
+
 100 epochs
+
 Training complete in 83m 59s
 Minimum test Loss: 0.562117
 
 **evaluation**
+
 1%
 Training complete in 1m 37s
 Best test Accuracy:  0.291600
@@ -111,10 +136,17 @@ Best test Accuracy: 0.440800
 
 
 ### resnet DAE
+lr 1e-3
+
+bs 32
+
+100 epochs
+
 Training complete in 86m 53s
 Minimum test Loss: 0.563424
 
 **evaluation**
+
 1%
 Training complete in 1m 46s
 Best test Accuracy: 0.288600
@@ -133,6 +165,12 @@ Best test Accuracy: 0.441400
 
 
 ### supervised
+lr 1e-3
+
+bs 32
+
+100 epochs
+
 1%
 Training complete in 6m 9s
 Best test Accuracy: 0.396300
@@ -153,9 +191,125 @@ Best test Accuracy: 0.823500
 
 ### SIMCLR 
 
-*crop + crop*
-1% 34.18%
-10% 41.44%
-50% 44.45%
-100% 45.87%
+#### Unsupervised pretraining on CIFAR-10 train set hyperparams
+epochs: 40
+
+learning rate: 3e-4
+
+batch size: 256
+
+projection dim: 46
+
+temperature of contrastive loss: 0.5
+
+
+#### Best Test Accuracy of linear classifier with different combinations of transforms
+epochs: 100
+
+learning rate: 1e-3
+
+batch size: 32
+
+**crop + color + blur** (Optimal Combination of transforms according to paper)
+
+1% 
+
+10% 
+
+50% 
+
+100% 
+
+
+**crop + crop**
+
+1% 34.18
+
+10% 41.44
+
+50% 44.45
+
+100% 45.87
+
+**crop + color**
+
+1% 48.79
+
+10% 54.88
+
+50% 57.82
+
+100% 58.54
+
+**crop + blur**
+
+1% 34.91
+
+10% 42.87
+
+50% 46.41
+
+100% 47.04
+
+
+**color + crop**
+
+1% 48.17
+
+10% 54.67
+
+50% 57.70
+
+100% 58.16
+
+**color + color**
+
+1% 27.03
+
+10% 34.13
+
+50% 36.55
+
+100% 37.10
+
+**color + blur**
+
+1% 25.56
+
+10% 32.73
+
+50% 35.21
+
+100% 36.02
+
+
+**blur + crop**
+
+1% 35.00
+
+10% 42.99
+
+50% 46.46
+
+100% 47.41
+
+**blur + color**
+
+1% 25.52
+
+10% 32.52
+
+50% 34.23
+
+100% 35.53
+
+**blur + blur**
+
+1% 26.20
+
+10% 34.01
+
+50% 35.82
+
+100% 36.91%
 
